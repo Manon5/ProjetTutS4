@@ -9,6 +9,9 @@
   "installed_plugins": {
     "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "com.bob.projet"
+    },
+    "cordova-plugin-geolocation": {
+      "PACKAGE_NAME": "com.bob.projet"
     }
   },
   "dependent_plugins": {}
