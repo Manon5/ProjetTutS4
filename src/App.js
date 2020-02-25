@@ -53,6 +53,24 @@ var greenIcon = new L.Icon({
   shadowSize: [41, 41]
 });
 
+var redIcon = new L.Icon({
+  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
+var violetIcon = new L.Icon({
+  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
 const GreenMarker = ({ content, position }: Props) => (
   <Marker position={position} icon={greenIcon}>
   <Popup>{content}</Popup>
@@ -116,8 +134,12 @@ export default class CustomIcons extends Component {
           const monu = res.data;
           self.setState({monuments:monu});
           for(var i=0;i<Object.keys(this.state.monuments.id).length;i++){
-            console.log("dd");
-            L.marker([this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude],{icon:greenIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments.id[i].adresse);
+            if (this.state.monuments.id[i].Importance==1)
+              L.marker([this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude],{icon:greenIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments.id[i].adresse);
+              else if (this.state.monuments.id[i].Importance==2)
+              L.marker([this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude],{icon:violetIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments.id[i].adresse);
+              else
+              L.marker([this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude],{icon:redIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments.id[i].adresse);
           }
         }
       );
@@ -176,7 +198,7 @@ export default class CustomIcons extends Component {
 
     return (
       <div>
-      
+
          <Navbar bg="dark" variant="dark">
          <Col sm={11}>
              <FormControl type="text" placeholder="Search" className="mr-sm-2" expand = "md" size="sm"/>
@@ -189,7 +211,7 @@ export default class CustomIcons extends Component {
            <Button className="btn" variant = "light"><i className="fa fa-bars"></i></Button>
          </Col>
        </Navbar>
-      
+
         <Map  ref={(ref) => { this.map = ref; }} center={[49.133333,6.166667]} zoom={this.state.zoom}>
        <TileLayer
        attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
