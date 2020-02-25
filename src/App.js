@@ -3,12 +3,11 @@ import { Map, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
 import axios from 'axios'
 import Geolocation from '@react-native-community/geolocation'
-import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
-import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
-import Container from 'react-bootstrap/Container'
 import Col from 'react-bootstrap/Col'
 import Navbar from "react-bootstrap/Navbar";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 import FormControl from "react-bootstrap/FormControl";
 
 var position = [0,0]
@@ -26,12 +25,27 @@ function success(pos) {
 
 }
 
-function error(err) {
-  console.warn(`ERREUR (${err.code}): ${err.message}`);
+const GreenMarker = ({ content, position }: Props) => (
+   <Marker position={position} icon={greenIcon}>
+     <Popup>{content}</Popup>
+   </Marker>
+)
+
+const ListMarkerGreen = ({ markers }: { markers: Array<MarkerData> }) => {
+ const items = markers.map(({ key, ...props }) => (
+     <GreenMarker key={key} {...props} />
+ ))
+ return <React.Fragment>{items}</React.Fragment>
 }
 
+
 function clickRechercher() {
-  console.log("ça marche bieng");
+ console.log("ça marche bieng");
+}
+
+
+function error(err) {
+  console.warn(`ERREUR (${err.code}): ${err.message}`);
 }
 
 type State = {
@@ -42,7 +56,7 @@ type State = {
   markersRed: Array<MarkerData>,
 }
 
-// ICONE VERTE
+// ICONE COULEUR
 
 var greenIcon = new L.Icon({
   iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
@@ -71,18 +85,7 @@ var violetIcon = new L.Icon({
   shadowSize: [41, 41]
 });
 
-const GreenMarker = ({ content, position }: Props) => (
-  <Marker position={position} icon={greenIcon}>
-  <Popup>{content}</Popup>
-  </Marker>
-)
 
-const ListMarkerGreen = ({ markers }: { markers: Array<MarkerData> }) => {
-  const items = markers.map(({ key, ...props }) => (
-    <GreenMarker key={key} {...props} />
-  ))
-  return <React.Fragment>{items}</React.Fragment>
-}
 
 //
 
@@ -130,16 +133,16 @@ export default class CustomIcons extends Component {
     var self= this;
     Geolocation.getCurrentPosition(success, error, options);
     this.setState({marker:position});
-    axios.get('https://my-json-server.typicode.com/Yonah125/test/db').then(res=>{
+    axios.get('https://my-json-server.typicode.com/Yonah125/test3/db').then(res=>{
           const monu = res.data;
           self.setState({monuments:monu});
           for(var i=0;i<Object.keys(this.state.monuments.id).length;i++){
             if (this.state.monuments.id[i].Importance==1)
-              L.marker([this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude],{icon:greenIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments.id[i].adresse);
+              L.marker([this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude],{icon:greenIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments.id[i].nom_monu);
               else if (this.state.monuments.id[i].Importance==2)
-              L.marker([this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude],{icon:violetIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments.id[i].adresse);
+              L.marker([this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude],{icon:violetIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments.id[i].nom_monu);
               else
-              L.marker([this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude],{icon:redIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments.id[i].adresse);
+              L.marker([this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude],{icon:redIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments.id[i].nom_monu);
           }
         }
       );
@@ -174,7 +177,7 @@ export default class CustomIcons extends Component {
     <Popup className="request-popup">
       <div style={popupContent}>
         <img
-          src="https://cdn3.iconfinder.com/data/icons/basicolor-arrows-checks/24/149_check_ok-512.png"
+          src="https://cdn.vox-cdn.com/thumbor/-YgFj4-1xPchm7IMQpLkoRWUB9A=/0x0:2048x1208/1400x933/filters:focal(1116x306:1442x632):no_upscale()/cdn.vox-cdn.com/uploads/chorus_image/image/59579007/DcDLKrMU0AAs9XL.0.jpg"
           width="150"
           height="150"
         />
@@ -222,6 +225,7 @@ export default class CustomIcons extends Component {
        </Map>
 
       </div>
+
     )
   }
 }
