@@ -133,16 +133,16 @@ export default class CustomIcons extends Component {
     var self= this;
     Geolocation.getCurrentPosition(success, error, options);
     this.setState({marker:position});
-    axios.get('https://my-json-server.typicode.com/Yonah125/test/db').then(res=>{
+    axios.get('https://my-json-server.typicode.com/Yonah125/test3/db').then(res=>{
           const monu = res.data;
           self.setState({monuments:monu});
           for(var i=0;i<Object.keys(this.state.monuments.id).length;i++){
             if (this.state.monuments.id[i].Importance==1)
-              L.marker([this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude],{icon:greenIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments.id[i].adresse);
+              L.marker([this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude],{icon:greenIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments.id[i].nom_monu);
               else if (this.state.monuments.id[i].Importance==2)
-              L.marker([this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude],{icon:violetIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments.id[i].adresse);
+              L.marker([this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude],{icon:violetIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments.id[i].nom_monu);
               else
-              L.marker([this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude],{icon:redIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments.id[i].adresse);
+              L.marker([this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude],{icon:redIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments.id[i].nom_monu);
           }
         }
       );
