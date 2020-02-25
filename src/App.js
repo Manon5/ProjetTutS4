@@ -30,6 +30,10 @@ function error(err) {
   console.warn(`ERREUR (${err.code}): ${err.message}`);
 }
 
+function clickRechercher() {
+  console.log("ça marche bieng");
+}
+
 type State = {
   lat: number,
   lng: number,
@@ -178,7 +182,7 @@ export default class CustomIcons extends Component {
              <FormControl type="text" placeholder="Search" className="mr-sm-2" expand = "md" size="sm"/>
          </Col>
          <Col sm={0.5}>
-         <Button className="btn" variant = "outline-light"><i className="fa fa-search"></i></Button>
+         <Button className="btn" variant = "outline-light"  onClick = {() => clickRechercher()}><i className="fa fa-search"></i></Button>
        </Col>
 
          <Col sm={0.5}>
