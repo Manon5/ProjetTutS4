@@ -30,29 +30,35 @@ type State = {
   lat: number,
   lng: number,
   zoom: number,
+  markersGreen: Array<MarkerData>,
+  markersRed: Array<MarkerData>,
 }
 
-export const pointerIcon = new L.Icon({
-  iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Bruce_Lee_1973.jpg/290px-Bruce_Lee_1973.jpg',
-  iconRetinaUrl: '../assets/pointerIcon.svg',
-  iconAnchor: [5, 55],
-  popupAnchor: [10, -44],
-  iconSize: [25, 55],
-  shadowUrl: '../assets/marker-shadow.png',
-  shadowSize: [68, 95],
-  shadowAnchor: [20, 92],
-})
+// ICONE VERTE
 
-export const suitcasePoint = new L.Icon({
-  iconUrl: 'https://images-na.ssl-images-amazon.com/images/I/61Vh5DJkCKL._AC_SL1000_.jpg',
-  iconRetinaUrl: '../assets/suitcaseIcon.svg',
-  iconAnchor: [20, 40],
-  popupAnchor: [0, -35],
-  iconSize: [40, 40],
-  shadowUrl: '../assets/marker-shadow.png',
-  shadowSize: [29, 40],
-  shadowAnchor: [7, 40],
-})
+var greenIcon = new L.Icon({
+  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
+const GreenMarker = ({ content, position }: Props) => (
+  <Marker position={position} icon={greenIcon}>
+  <Popup>{content}</Popup>
+  </Marker>
+)
+
+const ListMarkerGreen = ({ markers }: { markers: Array<MarkerData> }) => {
+  const items = markers.map(({ key, ...props }) => (
+    <GreenMarker key={key} {...props} />
+  ))
+  return <React.Fragment>{items}</React.Fragment>
+}
+
+//
 
 export default class CustomIcons extends Component {
   constructor(props) {
@@ -62,61 +68,50 @@ export default class CustomIcons extends Component {
       marker:position,
       zoom:14,
       draggable: true,
-
-
+      markers: [
+        { key: 'marker1', position: [51.5, -0.1], content: 'My first popup' },
+        { key: 'marker2', position: [51.51, -0.1], content: 'My second popup' },
+        { key: 'marker3', position: [51.49, -0.05], content: 'My third popup' },
+      ],
     };
-
-
   }
 
 
   componentDidMount() {
     Geolocation.getCurrentPosition(success, error, options);
     this.setState({marker:position});
-   }
-
-   update = () =>{
-
-
-    Geolocation.getCurrentPosition(success, error, options);
-    this.setState({marker:position,zoom:this.getMapZoom()});
-
-
   }
 
-
-
-
-
+  update = () =>{
+    Geolocation.getCurrentPosition(success, error, options);
+    this.setState({marker:position,zoom:this.getMapZoom()});
+  }
 
   handleZoomstart = (map) => {
-  console.log(this.map && this.map.leafletElement);
-};
+    console.log(this.map && this.map.leafletElement);
+  };
 
-getMapZoom() {
-   return this.map && this.map.leafletElement.getZoom();
-}
+  getMapZoom() {
+    return this.map && this.map.leafletElement.getZoom();
+  }
 
   render() {
-
-
     console.log(`La précision est de ${position} mètres.`);
+
     const marker =
-      <Marker position={this.state.marker}
-
-            onLoad={setInterval(this.update, 5000)}>
-        <Popup>You are here</Popup>
-      </Marker>
-
-
+    <Marker position={this.state.marker}
+    onLoad={setInterval(this.update, 5000)}>
+    <Popup>You are here</Popup>
+    </Marker>
 
     return (
       <Map  ref={(ref) => { this.map = ref; }} center={[49.133333,6.166667]} zoom={this.state.zoom}>
-        <TileLayer
-          attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        {marker}
+      <TileLayer
+      attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      {marker}
+      <ListMarkerGreen markers={this.state.markers} />
       </Map>
     )
   }
