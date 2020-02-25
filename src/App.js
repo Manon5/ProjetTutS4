@@ -31,7 +31,7 @@ type State = {
   markersRed: Array<MarkerData>,
 }
 
-// ICONE VERTE
+// ICONE COULEUR
 
 var greenIcon = new L.Icon({
   iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
@@ -42,18 +42,24 @@ var greenIcon = new L.Icon({
   shadowSize: [41, 41]
 });
 
-const GreenMarker = ({ content, position }: Props) => (
-  <Marker position={position} icon={greenIcon}>
-  <Popup>{content}</Popup>
-  </Marker>
-)
+var redIcon = new L.Icon({
+  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
 
-const ListMarkerGreen = ({ markers }: { markers: Array<MarkerData> }) => {
-  const items = markers.map(({ key, ...props }) => (
-    <GreenMarker key={key} {...props} />
-  ))
-  return <React.Fragment>{items}</React.Fragment>
-}
+var violetIcon = new L.Icon({
+  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
 
 //
 
@@ -105,8 +111,13 @@ export default class CustomIcons extends Component {
           const monu = res.data;
           self.setState({monuments:monu});
           for(var i=0;i<Object.keys(this.state.monuments.id).length;i++){
-            console.log("dd");
+            if (this.state.monuments.id[i].Importance==1)
             L.marker([this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude],{icon:greenIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments.id[i].adresse);
+            else if (this.state.monuments.id[i].Importance==2)
+            L.marker([this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude],{icon:violetIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments.id[i].adresse);
+            else
+            L.marker([this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude],{icon:redIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments.id[i].adresse);
+
           }
         }
       );
@@ -141,7 +152,7 @@ export default class CustomIcons extends Component {
     <Popup className="request-popup">
       <div style={popupContent}>
         <img
-          src="https://cdn3.iconfinder.com/data/icons/basicolor-arrows-checks/24/149_check_ok-512.png"
+          src="https://cdn.vox-cdn.com/thumbor/-YgFj4-1xPchm7IMQpLkoRWUB9A=/0x0:2048x1208/1400x933/filters:focal(1116x306:1442x632):no_upscale()/cdn.vox-cdn.com/uploads/chorus_image/image/59579007/DcDLKrMU0AAs9XL.0.jpg"
           width="150"
           height="150"
         />
@@ -170,10 +181,6 @@ export default class CustomIcons extends Component {
       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {marker}
-      <ListMarkerGreen markers={this.state.markers} />
-
-
-
       </Map>
     )
   }
