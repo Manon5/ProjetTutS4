@@ -3,7 +3,7 @@ import { Map, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
 import Geolocation from '@react-native-community/geolocation'
 
-var position = [49.119950,6.163673]
+var position = [0,0]
 
 
 var options = {
@@ -60,6 +60,7 @@ export default class CustomIcons extends Component {
 
     this.state={
       marker:position,
+      zoom:14,
       draggable: true,
 
 
@@ -75,11 +76,26 @@ export default class CustomIcons extends Component {
    }
 
    update = () =>{
+
+
     Geolocation.getCurrentPosition(success, error, options);
-    this.setState({marker:position});
+    this.setState({marker:position,zoom:this.getMapZoom()});
 
 
   }
+
+
+
+
+
+
+  handleZoomstart = (map) => {
+  console.log(this.map && this.map.leafletElement);
+};
+
+getMapZoom() {
+   return this.map && this.map.leafletElement.getZoom();
+}
 
   render() {
 
@@ -88,14 +104,14 @@ export default class CustomIcons extends Component {
     const marker =
       <Marker position={this.state.marker}
 
-            onLoad={setInterval(this.update, 2000)}>
+            onLoad={setInterval(this.update, 5000)}>
         <Popup>You are here</Popup>
       </Marker>
 
 
 
     return (
-      <Map center={position} zoom={17}>
+      <Map  ref={(ref) => { this.map = ref; }} center={[49.133333,6.166667]} zoom={this.state.zoom}>
         <TileLayer
           attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
