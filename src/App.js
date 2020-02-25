@@ -3,6 +3,12 @@ import { Map, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
 import axios from 'axios'
 import Geolocation from '@react-native-community/geolocation'
+import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col'
+import Navbar from "react-bootstrap/Navbar";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+import FormControl from "react-bootstrap/FormControl";
 
 var position = [0,0]
 
@@ -18,6 +24,25 @@ function success(pos) {
   position=[crd.latitude,crd.longitude];
 
 }
+
+const GreenMarker = ({ content, position }: Props) => (
+   <Marker position={position} icon={greenIcon}>
+     <Popup>{content}</Popup>
+   </Marker>
+)
+
+const ListMarkerGreen = ({ markers }: { markers: Array<MarkerData> }) => {
+ const items = markers.map(({ key, ...props }) => (
+     <GreenMarker key={key} {...props} />
+ ))
+ return <React.Fragment>{items}</React.Fragment>
+}
+
+
+function clickRechercher() {
+ console.log("ça marche bieng");
+}
+
 
 function error(err) {
   console.warn(`ERREUR (${err.code}): ${err.message}`);
@@ -59,6 +84,7 @@ var violetIcon = new L.Icon({
   popupAnchor: [1, -34],
   shadowSize: [41, 41]
 });
+
 
 
 //
@@ -112,12 +138,11 @@ export default class CustomIcons extends Component {
           self.setState({monuments:monu});
           for(var i=0;i<Object.keys(this.state.monuments.id).length;i++){
             if (this.state.monuments.id[i].Importance==1)
-            L.marker([this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude],{icon:greenIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments.id[i].adresse);
-            else if (this.state.monuments.id[i].Importance==2)
-            L.marker([this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude],{icon:violetIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments.id[i].adresse);
-            else
-            L.marker([this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude],{icon:redIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments.id[i].adresse);
-
+              L.marker([this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude],{icon:greenIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments.id[i].adresse);
+              else if (this.state.monuments.id[i].Importance==2)
+              L.marker([this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude],{icon:violetIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments.id[i].adresse);
+              else
+              L.marker([this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude],{icon:redIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments.id[i].adresse);
           }
         }
       );
@@ -175,13 +200,32 @@ export default class CustomIcons extends Component {
 
 
     return (
-      <Map  ref={(ref) => { this.map = ref; }} center={[49.133333,6.166667]} zoom={this.state.zoom}>
-      <TileLayer
-      attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      {marker}
-      </Map>
+      <div>
+
+         <Navbar bg="dark" variant="dark">
+         <Col sm={11}>
+             <FormControl type="text" placeholder="Search" className="mr-sm-2" expand = "md" size="sm"/>
+         </Col>
+         <Col sm={0.5}>
+         <Button className="btn" variant = "outline-light"  onClick = {() => clickRechercher()}><i className="fa fa-search"></i></Button>
+       </Col>
+
+         <Col sm={0.5}>
+           <Button className="btn" variant = "light"><i className="fa fa-bars"></i></Button>
+         </Col>
+       </Navbar>
+
+        <Map  ref={(ref) => { this.map = ref; }} center={[49.133333,6.166667]} zoom={this.state.zoom}>
+       <TileLayer
+       attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        {marker}
+        <ListMarkerGreen markers={this.state.markers} />
+       </Map>
+
+      </div>
+
     )
   }
 }
