@@ -3,6 +3,13 @@ import { Map, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
 import axios from 'axios'
 import Geolocation from '@react-native-community/geolocation'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Button from 'react-bootstrap/Button';
+import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
+import Container from 'react-bootstrap/Container'
+import Col from 'react-bootstrap/Col'
+import Navbar from "react-bootstrap/Navbar";
+import FormControl from "react-bootstrap/FormControl";
 
 var position = [0,0]
 
@@ -164,17 +171,31 @@ export default class CustomIcons extends Component {
 
 
     return (
-      <Map  ref={(ref) => { this.map = ref; }} center={[49.133333,6.166667]} zoom={this.state.zoom}>
-      <TileLayer
-      attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      {marker}
-      <ListMarkerGreen markers={this.state.markers} />
+      <div>
+      
+         <Navbar bg="dark" variant="dark">
+         <Col sm={11}>
+             <FormControl type="text" placeholder="Search" className="mr-sm-2" expand = "md" size="sm"/>
+         </Col>
+         <Col sm={0.5}>
+         <Button className="btn" variant = "outline-light"><i className="fa fa-search"></i></Button>
+       </Col>
 
+         <Col sm={0.5}>
+           <Button className="btn" variant = "light"><i className="fa fa-bars"></i></Button>
+         </Col>
+       </Navbar>
+      
+        <Map  ref={(ref) => { this.map = ref; }} center={[49.133333,6.166667]} zoom={this.state.zoom}>
+       <TileLayer
+       attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        {marker}
+        <ListMarkerGreen markers={this.state.markers} />
+       </Map>
 
-
-      </Map>
+      </div>
     )
   }
 }
