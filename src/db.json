@@ -1,0 +1,6 @@
+{ "id":
+  [{"id_monu":1, "nom_monu":"Cathedrale Saint-Etienne", "adresse":"Place d'Armes", "Latitude":49.1203081, "Longitude":6.1736087, "Importance":1},
+ {"id_monu":2, "nom_monu":"IUT de Metz", "adresse":"IUT de Metz", "Latitude":49.120191, "Longitude":6.1616238, "Importance":1},
+ {"id_monu":3, "nom_monu":"Temple Neuf", "adresse":"Place de la Com\u00e9die", "Latitude":49.120691, "Longitude":6.1699988, "Importance":1},
+ {"id_monu":4, "nom_monu":"Place de la Republique", "adresse":"Place de la Republique", "Latitude":49.115191, "Longitude":6.1704988, "Importance":1},
+ {"id_monu":5, "nom_monu":"Plan d\u2019eau", "adresse":"Plan d'eau", "Latitude":49.1144581, "Longitude":6.1636167, "Importance":2}]}

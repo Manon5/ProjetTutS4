@@ -15,10 +15,6 @@ var options = {
 
 function success(pos) {
   var crd = pos.coords;
-  console.log('Votre position actuelle est :');
-  console.log(`Latitude : ${crd.latitude}`);
-  console.log(`Longitude : ${crd.longitude}`);
-  console.log(`La précision est de ${crd.accuracy} mètres.`);
   position=[crd.latitude,crd.longitude];
 
 }
@@ -102,13 +98,19 @@ export default class CustomIcons extends Component {
 
 
   componentDidMount() {
+    var self= this;
     Geolocation.getCurrentPosition(success, error, options);
     this.setState({marker:position});
     axios.get('https://my-json-server.typicode.com/Yonah125/test/db').then(res=>{
-    console.log(res);
-    this.setState({monuments:res.data});
-    });
-    console.log(`${this.monuments}`);
+          const monu = res.data;
+          self.setState({monuments:monu});
+          for(var i=0;i<Object.keys(this.state.monuments.id).length;i++){
+            console.log("dd");
+            L.marker([this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude],{icon:greenIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments.id[i].adresse);
+          }
+        }
+      );
+
 
 
   }
@@ -116,12 +118,13 @@ export default class CustomIcons extends Component {
   update = () =>{
     Geolocation.getCurrentPosition(success, error, options);
     this.setState({marker:position,zoom:this.getMapZoom()});
+
   }
 
 
   addmarker(){
     console.log(`${this.map}`);
-    L.marker([50.5, 30.5]).addTo(this.map);
+    L.marker([50.5, 30.5]).addTo(this.map.leafletElement);
   }
   handleZoomstart = (map) => {
     console.log(this.map && this.map.leafletElement);
@@ -132,7 +135,6 @@ export default class CustomIcons extends Component {
   }
 
   render() {
-    console.log(`La précision est de ${position} mètres.`);
     const marker =
     <Marker position={this.state.marker}
     onLoad={setInterval(this.update, 5000)}>
