@@ -215,7 +215,7 @@ export default class CustomIcons extends Component {
          </Col>
        </Navbar>
 
-        <Map  ref={(ref) => { this.map = ref; }} center={[49.133333,6.166667]} zoom={this.state.zoom}>
+        <Map  ref={(ref) => { this.map = ref; }} center={[49.133333,6.166667]} zoomControl={false} zoom={this.state.zoom}>
        <TileLayer
        attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
