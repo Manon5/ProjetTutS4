@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Map, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
+import axios from 'axios'
 import Geolocation from '@react-native-community/geolocation'
 
 var position = [0,0]
@@ -60,6 +61,28 @@ const ListMarkerGreen = ({ markers }: { markers: Array<MarkerData> }) => {
 
 //
 
+
+const popupContent = {
+  textAlign: "center",
+  height: "350px",
+  marginTop: "30px"
+};
+const popupHead = {
+  fontWeight: "bold",
+  fontSize: "22px"
+};
+
+const popupText = {
+  fontSize: "15px",
+  marginBottom: "20px"
+};
+
+const okText = {
+  fontSize: "15px"
+};
+
+export { popupContent, popupHead, popupText, okText };
+
 export default class CustomIcons extends Component {
   constructor(props) {
     super();
@@ -73,6 +96,7 @@ export default class CustomIcons extends Component {
         { key: 'marker2', position: [51.51, -0.1], content: 'My second popup' },
         { key: 'marker3', position: [51.49, -0.05], content: 'My third popup' },
       ],
+      monuments:[],
     };
   }
 
@@ -80,6 +104,13 @@ export default class CustomIcons extends Component {
   componentDidMount() {
     Geolocation.getCurrentPosition(success, error, options);
     this.setState({marker:position});
+    axios.get('https://my-json-server.typicode.com/Yonah125/test/db').then(res=>{
+    console.log(res);
+    this.setState({monuments:res.data});
+    });
+    console.log(`${this.monuments}`);
+
+
   }
 
   update = () =>{
@@ -87,6 +118,11 @@ export default class CustomIcons extends Component {
     this.setState({marker:position,zoom:this.getMapZoom()});
   }
 
+
+  addmarker(){
+    console.log(`${this.map}`);
+    L.marker([50.5, 30.5]).addTo(this.map);
+  }
   handleZoomstart = (map) => {
     console.log(this.map && this.map.leafletElement);
   };
@@ -97,12 +133,33 @@ export default class CustomIcons extends Component {
 
   render() {
     console.log(`La précision est de ${position} mètres.`);
-
     const marker =
     <Marker position={this.state.marker}
     onLoad={setInterval(this.update, 5000)}>
-    <Popup>You are here</Popup>
-    </Marker>
+    <Popup className="request-popup">
+      <div style={popupContent}>
+        <img
+          src="https://cdn3.iconfinder.com/data/icons/basicolor-arrows-checks/24/149_check_ok-512.png"
+          width="150"
+          height="150"
+        />
+        <div className="m-2" style={popupHead}>
+          Success!
+        </div>
+        <span style={popupText}>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+          enim ad minim veniam, quis nostrud exercitation ullamco laboris
+          nisi ut aliquip ex ea commodo consequat.
+        </span>
+        <div className="m-2" style={okText}>
+          Okay
+        </div>
+      </div>
+    </Popup>
+  </Marker>
+
+
 
     return (
       <Map  ref={(ref) => { this.map = ref; }} center={[49.133333,6.166667]} zoom={this.state.zoom}>
@@ -112,6 +169,9 @@ export default class CustomIcons extends Component {
       />
       {marker}
       <ListMarkerGreen markers={this.state.markers} />
+
+
+
       </Map>
     )
   }
