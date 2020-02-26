@@ -11,31 +11,42 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import FormControl from "react-bootstrap/FormControl";
 
 var position = [0,0]
-
+var nearLocation=[];
 
 var options = {
   enableHighAccuracy: true,
-  timeout: 5000,
+  timeout: 10000,
   maximumAge: 0
 };
+
+
+function distance(lat1, lon1, lat2, lon2) {
+	if ((lat1 == lat2) && (lon1 == lon2)) {
+		return 0;
+	}
+	else {
+		var radlat1 = Math.PI * lat1/180;
+		var radlat2 = Math.PI * lat2/180;
+		var theta = lon1-lon2;
+		var radtheta = Math.PI * theta/180;
+		var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+		if (dist > 1) {
+			dist = 1;
+		}
+		dist = Math.acos(dist);
+		dist = dist * 180/Math.PI;
+		dist = dist * 60 * 1.1515;
+		dist = dist * 1.609344;
+
+		return dist*1000;
+	}
+}
+
 
 function success(pos) {
   var crd = pos.coords;
   position=[crd.latitude,crd.longitude];
 
-}
-
-const GreenMarker = ({ content, position }: Props) => (
-   <Marker position={position} icon={greenIcon}>
-     <Popup>{content}</Popup>
-   </Marker>
-)
-
-const ListMarkerGreen = ({ markers }: { markers: Array<MarkerData> }) => {
- const items = markers.map(({ key, ...props }) => (
-     <GreenMarker key={key} {...props} />
- ))
- return <React.Fragment>{items}</React.Fragment>
 }
 
 
@@ -45,7 +56,6 @@ function clickRechercher() {
 
 
 function error(err) {
-  console.warn(`ERREUR (${err.code}): ${err.message}`);
 }
 
 type State = {
@@ -109,8 +119,6 @@ const okText = {
   fontSize: "15px"
 };
 
-export { popupContent, popupHead, popupText, okText };
-
 export default class CustomIcons extends Component {
   constructor(props) {
     super();
@@ -118,13 +126,14 @@ export default class CustomIcons extends Component {
     this.state={
       marker:position,
       zoom:14,
-      draggable: true,
+      near:false,
       markers: [
         { key: 'marker1', position: [51.5, -0.1], content: 'My first popup' },
         { key: 'marker2', position: [51.51, -0.1], content: 'My second popup' },
         { key: 'marker3', position: [51.49, -0.05], content: 'My third popup' },
       ],
       monuments:[],
+
     };
   }
 
@@ -154,14 +163,20 @@ export default class CustomIcons extends Component {
   update = () =>{
     Geolocation.getCurrentPosition(success, error, options);
     this.setState({marker:position,zoom:this.getMapZoom()});
+    if (nearLocation != [] && distance(nearLocation[0],nearLocation[1],position[0],position[1])>150){
+      this.setState({near:false});
+    }
+    for(var i=0;i<Object.keys(this.state.monuments.id).length;i++){
+     if (distance(position[0],position[1],this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude)<=150 && this.state.near==false){
+          this.setState({near:true});
+          nearLocation=[this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude,i];
+          alert(`Vous êtes proche de `+this.state.monuments.id[i].nom_monu)
+          break;
+        }
+      }
 
   }
 
-
-  addmarker(){
-    console.log(`${this.map}`);
-    L.marker([50.5, 30.5]).addTo(this.map.leafletElement);
-  }
   handleZoomstart = (map) => {
     console.log(this.map && this.map.leafletElement);
   };
@@ -173,7 +188,7 @@ export default class CustomIcons extends Component {
   render() {
     const marker =
     <Marker position={this.state.marker}
-    onLoad={setInterval(this.update, 5000)}>
+    onLoad={setInterval(this.update, 1000)}>
     <Popup className="request-popup">
       <div style={popupContent}>
         <img
@@ -214,14 +229,12 @@ export default class CustomIcons extends Component {
            <Button className="btn" variant = "light"><i className="fa fa-bars"></i></Button>
          </Col>
        </Navbar>
-
-        <Map  ref={(ref) => { this.map = ref; }} center={[49.133333,6.166667]} zoom={this.state.zoom}>
+<Map  ref={(ref) => { this.map = ref; }} center={[49.133333,6.166667]} zoom={this.state.zoom} maxBounds={[[49.072067,6.100502],[49.143538,6.256371]]} maxBoundsViscosity={1.0} zoomControl={false} maxZoom={18} minZoom={13}>
        <TileLayer
        attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {marker}
-        <ListMarkerGreen markers={this.state.markers} />
        </Map>
 
       </div>
