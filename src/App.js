@@ -148,11 +148,12 @@ export default class CustomIcons extends Component {
           self.setState({monuments:monu});
           for(var i=0;i<Object.keys(this.state.monuments).length;i++){
             if (this.state.monuments[i].id_imp==1)
-              L.marker([this.state.monuments[i].Latitude,this.state.monuments[i].Longitude],{icon:greenIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments[i].nom_monu);
+              L.marker([this.state.monuments[i].Latitude,this.state.monuments[i].Longitude],{icon:greenIcon}).addTo(this.map.leafletElement)
+              .bindPopup('<img style="width:100%;border: 2px solid;" src="https://devweb.iutmetz.univ-lorraine.fr/~ramier2u/monumix/images/monument'+(i+1)+'/image1.jpg">'+'<center><b>'+this.state.monuments[i].nom_monu+'</b></center>'+'<br \>'+'<center>'+this.state.monuments[i].lib_imp+'</center>');
               else if (this.state.monuments[i].id_imp==2)
-              L.marker([this.state.monuments[i].Latitude,this.state.monuments[i].Longitude],{icon:violetIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments[i].nom_monu);
+              L.marker([this.state.monuments[i].Latitude,this.state.monuments[i].Longitude],{icon:violetIcon}).addTo(this.map.leafletElement).bindPopup('<img style="width:100%;border: 2px solid;" src="https://devweb.iutmetz.univ-lorraine.fr/~ramier2u/monumix/images/monument'+(i+1)+'/image1.jpg">'+'<center><b>'+this.state.monuments[i].nom_monu+'</b></center>'+'<br \>'+'<center>'+this.state.monuments[i].lib_imp+'</center>');
               else
-              L.marker([this.state.monuments[i].Latitude,this.state.monuments[i].Longitude],{icon:redIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments[i].nom_monu);
+              L.marker([this.state.monuments[i].Latitude,this.state.monuments[i].Longitude],{icon:redIcon}).addTo(this.map.leafletElement).bindPopup('<img style="width:100%;border: 2px solid;" src="https://devweb.iutmetz.univ-lorraine.fr/~ramier2u/monumix/images/monument'+(i+1)+'/image1.jpg">'+'<center><b>'+this.state.monuments[i].nom_monu+'</b></center>'+'<br \>'+'<center>'+this.state.monuments[i].lib_imp+'</center>');
           }
         }
       );
