@@ -161,6 +161,8 @@ export default class CustomIcons extends Component {
   }
 
   update = () =>{
+    window.navigator.vibrate(1000);
+
     Geolocation.getCurrentPosition(success, error, options);
     this.setState({marker:position,zoom:this.getMapZoom()});
     if (nearLocation != [] && distance(nearLocation[0],nearLocation[1],position[0],position[1])>150){
@@ -168,9 +170,12 @@ export default class CustomIcons extends Component {
     }
     for(var i=0;i<Object.keys(this.state.monuments.id).length;i++){
      if (distance(position[0],position[1],this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude)<=150 && this.state.near==false){
+          window.navigator.vibrate(1000);
           this.setState({near:true});
-          nearLocation=[this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude,i];
           alert(`Vous êtes proche de `+this.state.monuments.id[i].nom_monu)
+
+          nearLocation=[this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude,i];
+          //alert(`Vous êtes proche de `+this.state.monuments.id[i].nom_monu)
           break;
         }
       }

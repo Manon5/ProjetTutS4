@@ -12,6 +12,9 @@
     },
     "cordova-plugin-geolocation": {
       "PACKAGE_NAME": "com.bob.projet"
+    },
+    "cordova-plugin-vibration": {
+      "PACKAGE_NAME": "com.bob.projet1"
     }
   },
   "dependent_plugins": {}
