@@ -1,17 +1,42 @@
 import React, { Component } from "react";
-import { Button } from 'react-bootstrap';
 import history from './../history';
 import "./Home.css";
-
 import { Map, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
-import axios from 'axios'
 import Geolocation from '@react-native-community/geolocation'
+import { Button } from 'react-bootstrap';
 import Col from 'react-bootstrap/Col'
 import Navbar from "react-bootstrap/Navbar";
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 import FormControl from "react-bootstrap/FormControl";
+import axios from 'axios'
+
+const popupContent = {
+  textAlign: "center",
+  height: "350px",
+  marginTop: "30px"
+};
+const popupHead = {
+  fontWeight: "bold",
+  fontSize: "22px"
+};
+
+const popupText = {
+  fontSize: "15px",
+  marginBottom: "20px"
+};
+
+const okText = {
+  fontSize: "15px"
+};
+
+type State = {
+  lat: number,
+  lng: number,
+  zoom: number,
+  markersGreen: Array<MarkerData>,
+  markersRed: Array<MarkerData>,
+}
 
 var position = [0,0]
 var nearLocation=[];
@@ -21,55 +46,6 @@ var options = {
   timeout: 10000,
   maximumAge: 0
 };
-
-
-
-
-function distance(lat1, lon1, lat2, lon2) {
-  if ((lat1 == lat2) && (lon1 == lon2)) {
-    return 0;
-  }
-  else {
-    var radlat1 = Math.PI * lat1/180;
-    var radlat2 = Math.PI * lat2/180;
-    var theta = lon1-lon2;
-    var radtheta = Math.PI * theta/180;
-    var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-    if (dist > 1) {
-      dist = 1;
-    }
-    dist = Math.acos(dist);
-    dist = dist * 180/Math.PI;
-    dist = dist * 60 * 1.1515;
-    dist = dist * 1.609344;
-
-    return dist*1000;
-  }
-}
-
-
-function success(pos) {
-  var crd = pos.coords;
-  position=[crd.latitude,crd.longitude];
-
-}
-
-
-function clickRechercher() {
-  console.log("ça marche bieng");
-}
-
-
-function error(err) {
-}
-
-type State = {
-  lat: number,
-  lng: number,
-  zoom: number,
-  markersGreen: Array<MarkerData>,
-  markersRed: Array<MarkerData>,
-}
 
 // ICONE COULEUR
 
@@ -100,25 +76,37 @@ var violetIcon = new L.Icon({
   shadowSize: [41, 41]
 });
 
+function distance(lat1, lon1, lat2, lon2) {
+  if ((lat1 == lat2) && (lon1 == lon2)) {
+    return 0;
+  }
+  else {
+    var radlat1 = Math.PI * lat1/180;
+    var radlat2 = Math.PI * lat2/180;
+    var theta = lon1-lon2;
+    var radtheta = Math.PI * theta/180;
+    var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+    if (dist > 1) {
+      dist = 1;
+    }
+    dist = Math.acos(dist);
+    dist = dist * 180/Math.PI;
+    dist = dist * 60 * 1.1515;
+    dist = dist * 1.609344;
 
-const popupContent = {
-  textAlign: "center",
-  height: "350px",
-  marginTop: "30px"
-};
-const popupHead = {
-  fontWeight: "bold",
-  fontSize: "22px"
-};
+    return dist*1000;
+  }
+}
 
-const popupText = {
-  fontSize: "15px",
-  marginBottom: "20px"
-};
 
-const okText = {
-  fontSize: "15px"
-};
+function success(pos) {
+  var crd = pos.coords;
+  position=[crd.latitude,crd.longitude];
+
+}
+
+function error(err) {
+}
 
 
 export default class Home extends Component {
