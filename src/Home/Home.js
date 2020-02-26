@@ -10,25 +10,7 @@ import Navbar from "react-bootstrap/Navbar";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import FormControl from "react-bootstrap/FormControl";
 import axios from 'axios'
-
-const popupContent = {
-  textAlign: "center",
-  height: "350px",
-  marginTop: "30px"
-};
-const popupHead = {
-  fontWeight: "bold",
-  fontSize: "22px"
-};
-
-const popupText = {
-  fontSize: "15px",
-  marginBottom: "20px"
-};
-
-const okText = {
-  fontSize: "15px"
-};
+import 'leaflet-routing-machine';
 
 type State = {
   lat: number,
@@ -58,8 +40,8 @@ var greenIcon = new L.Icon({
   shadowSize: [41, 41]
 });
 
-var redIcon = new L.Icon({
-  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+var yellowIcon = new L.Icon({
+  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png',
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
   iconSize: [25, 41],
   iconAnchor: [12, 41],
@@ -139,12 +121,12 @@ export default class Home extends Component {
           self.setState({monuments:monu});
           for(var i=0;i<Object.keys(this.state.monuments).length;i++){
             if (this.state.monuments[i].id_imp==1)
-              L.marker([this.state.monuments[i].Latitude,this.state.monuments[i].Longitude],{icon:greenIcon}).addTo(this.map.leafletElement)
+              L.marker([this.state.monuments[i].Latitude,this.state.monuments[i].Longitude],{icon:yellowIcon}).addTo(this.map.leafletElement)
                   .bindPopup('<img style="width:100%;border: 2px solid;" src="https://devweb.iutmetz.univ-lorraine.fr/~ramier2u/monumix/images/monument'+(i+1)+'/image1.jpg">'+'<center><b>'+this.state.monuments[i].nom_monu+'</b></center>'+'<br \>'+'<center>'+this.state.monuments[i].lib_imp+'</center>');
             else if (this.state.monuments[i].id_imp==2)
               L.marker([this.state.monuments[i].Latitude,this.state.monuments[i].Longitude],{icon:violetIcon}).addTo(this.map.leafletElement).bindPopup('<img style="width:100%;border: 2px solid;" src="https://devweb.iutmetz.univ-lorraine.fr/~ramier2u/monumix/images/monument'+(i+1)+'/image1.jpg">'+'<center><b>'+this.state.monuments[i].nom_monu+'</b></center>'+'<br \>'+'<center>'+this.state.monuments[i].lib_imp+'</center>');
             else
-              L.marker([this.state.monuments[i].Latitude,this.state.monuments[i].Longitude],{icon:redIcon}).addTo(this.map.leafletElement).bindPopup('<img style="width:100%;border: 2px solid;" src="https://devweb.iutmetz.univ-lorraine.fr/~ramier2u/monumix/images/monument'+(i+1)+'/image1.jpg">'+'<center><b>'+this.state.monuments[i].nom_monu+'</b></center>'+'<br \>'+'<center>'+this.state.monuments[i].lib_imp+'</center>');
+              L.marker([this.state.monuments[i].Latitude,this.state.monuments[i].Longitude],{icon:greenIcon}).addTo(this.map.leafletElement).bindPopup('<img style="width:100%;border: 2px solid;" src="https://devweb.iutmetz.univ-lorraine.fr/~ramier2u/monumix/images/monument'+(i+1)+'/image1.jpg">'+'<center><b>'+this.state.monuments[i].nom_monu+'</b></center>'+'<br \>'+'<center>'+this.state.monuments[i].lib_imp+'</center>');
           }
         }
     );
@@ -155,7 +137,6 @@ export default class Home extends Component {
 
   update = () =>{
     window.navigator.vibrate(1000);
-
     Geolocation.getCurrentPosition(success, error, options);
     this.setState({marker:position,zoom:this.getMapZoom()});
     if (nearLocation != [] && distance(nearLocation[0],nearLocation[1],position[0],position[1])>150){
@@ -187,26 +168,8 @@ export default class Home extends Component {
     const marker =
         <Marker position={this.state.marker}
                 onLoad={setInterval(this.update, 1000)}>
-          <Popup className="request-popup">
-            <div style={popupContent}>
-              <img
-                  src="https://cdn.vox-cdn.com/thumbor/-YgFj4-1xPchm7IMQpLkoRWUB9A=/0x0:2048x1208/1400x933/filters:focal(1116x306:1442x632):no_upscale()/cdn.vox-cdn.com/uploads/chorus_image/image/59579007/DcDLKrMU0AAs9XL.0.jpg"
-                  width="150"
-                  height="150"
-              />
-              <div className="m-2" style={popupHead}>
-                Success!
-              </div>
-              <span style={popupText}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-          enim ad minim veniam, quis nostrud exercitation ullamco laboris
-          nisi ut aliquip ex ea commodo consequat.
-        </span>
-              <div className="m-2" style={okText}>
-                Okay
-              </div>
-            </div>
+          <Popup >
+            Vous êtes ici !
           </Popup>
         </Marker>
 
@@ -214,7 +177,7 @@ export default class Home extends Component {
 
     return (
         <div>
-          <Map  ref={(ref) => { this.map = ref; }} center={[49.133333,6.166667]} zoom={this.state.zoom} maxBounds={[[49.072067,6.100502],[49.143538,6.256371]]} maxBoundsViscosity={1.0} zoomControl={false} maxZoom={18} minZoom={13}>
+          <Map  ref={(ref) => { this.map = ref; }} center={[49.133333,6.166667]} zoom={this.state.zoom} maxBounds={[[49.072067,6.100502],[49.143538,6.256371]]} maxBoundsViscosity={1.0} zoomControl={true} maxZoom={18} minZoom={13}>
             <TileLayer
                 attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
