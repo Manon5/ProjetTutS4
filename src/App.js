@@ -138,20 +138,21 @@ export default class CustomIcons extends Component {
   }
 
 
+
   componentDidMount() {
-    var self= this;
+    var self= this
     Geolocation.getCurrentPosition(success, error, options);
     this.setState({marker:position});
-    axios.get('https://my-json-server.typicode.com/Yonah125/test3/db').then(res=>{
+    axios.get('https://devweb.iutmetz.univ-lorraine.fr/~ramier2u/monumix/api/monuments.php').then(res=>{
           const monu = res.data;
           self.setState({monuments:monu});
-          for(var i=0;i<Object.keys(this.state.monuments.id).length;i++){
-            if (this.state.monuments.id[i].Importance==1)
-              L.marker([this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude],{icon:greenIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments.id[i].nom_monu);
-              else if (this.state.monuments.id[i].Importance==2)
-              L.marker([this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude],{icon:violetIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments.id[i].nom_monu);
+          for(var i=0;i<Object.keys(this.state.monuments).length;i++){
+            if (this.state.monuments[i].id_imp==1)
+              L.marker([this.state.monuments[i].Latitude,this.state.monuments[i].Longitude],{icon:greenIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments[i].nom_monu);
+              else if (this.state.monuments[i].id_imp==2)
+              L.marker([this.state.monuments[i].Latitude,this.state.monuments[i].Longitude],{icon:violetIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments[i].nom_monu);
               else
-              L.marker([this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude],{icon:redIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments.id[i].nom_monu);
+              L.marker([this.state.monuments[i].Latitude,this.state.monuments[i].Longitude],{icon:redIcon}).addTo(this.map.leafletElement).bindPopup(this.state.monuments[i].nom_monu);
           }
         }
       );
@@ -168,13 +169,13 @@ export default class CustomIcons extends Component {
     if (nearLocation != [] && distance(nearLocation[0],nearLocation[1],position[0],position[1])>150){
       this.setState({near:false});
     }
-    for(var i=0;i<Object.keys(this.state.monuments.id).length;i++){
-     if (distance(position[0],position[1],this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude)<=150 && this.state.near==false){
+    for(var i=0;i<Object.keys(this.state.monuments).length;i++){
+     if (distance(position[0],position[1],this.state.monuments[i].Latitude,this.state.monuments[i].Longitude)<=150 && this.state.near==false){
           window.navigator.vibrate(1000);
           this.setState({near:true});
-          alert(`Vous êtes proche de `+this.state.monuments.id[i].nom_monu)
+          alert(`Vous êtes proche de `+this.state.monuments[i].nom_monu)
 
-          nearLocation=[this.state.monuments.id[i].Latitude,this.state.monuments.id[i].Longitude,i];
+          nearLocation=[this.state.monuments[i].Latitude,this.state.monuments[i].Longitude,i];
           //alert(`Vous êtes proche de `+this.state.monuments.id[i].nom_monu)
           break;
         }
