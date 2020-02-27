@@ -141,6 +141,7 @@ export default class Home extends Component {
     Geolocation.getCurrentPosition(success, error, options);
     position=[49.121418,6.172670];
     var vardis=150;
+;
     this.setState({marker:position,zoom:this.getMapZoom()});
     if (nearLocation != [] && distance(nearLocation[0],nearLocation[1],position[0],position[1])>150){
       this.setState({near:false});
