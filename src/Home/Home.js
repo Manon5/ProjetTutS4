@@ -40,8 +40,8 @@ var greenIcon = new L.Icon({
   shadowSize: [41, 41]
 });
 
-var yellowIcon = new L.Icon({
-  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png',
+var redIcon = new L.Icon({
+  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
   iconSize: [25, 41],
   iconAnchor: [12, 41],
@@ -57,6 +57,8 @@ var violetIcon = new L.Icon({
   popupAnchor: [1, -34],
   shadowSize: [41, 41]
 });
+
+
 
 function distance(lat1, lon1, lat2, lon2) {
   if ((lat1 == lat2) && (lon1 == lon2)) {
@@ -100,11 +102,6 @@ export default class Home extends Component {
       marker:position,
       zoom:14,
       near:false,
-      markers: [
-        { key: 'marker1', position: [51.5, -0.1], content: 'My first popup' },
-        { key: 'marker2', position: [51.51, -0.1], content: 'My second popup' },
-        { key: 'marker3', position: [51.49, -0.05], content: 'My third popup' },
-      ],
       monuments:[],
 
     };
@@ -115,21 +112,13 @@ export default class Home extends Component {
   componentDidMount() {
     var self= this
     Geolocation.getCurrentPosition(success, error, options);
-    Geolocation.watchPosition(position => {
-        this.setState({marker:[position.coords.latitude,position.coords.longitude]})
-        console.log(this.state.marker);
-  },
-  error => alert(error.message),
-  { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-);
-
-
+    this.setState({marker:position});
     axios.get('https://devweb.iutmetz.univ-lorraine.fr/~ramier2u/monumix/api/monuments.php').then(res=>{
           const monu = res.data;
           self.setState({monuments:monu});
           for(var i=0;i<Object.keys(this.state.monuments).length;i++){
             if (this.state.monuments[i].id_imp==1)
-              L.marker([this.state.monuments[i].Latitude,this.state.monuments[i].Longitude],{icon:yellowIcon}).addTo(this.map.leafletElement)
+              L.marker([this.state.monuments[i].Latitude,this.state.monuments[i].Longitude],{icon:redIcon}).addTo(this.map.leafletElement)
                   .bindPopup('<img style="width:100%;border: 2px solid;" src="https://devweb.iutmetz.univ-lorraine.fr/~ramier2u/monumix/images/monument'+(i+1)+'/image1.jpg">'+'<center><b>'+this.state.monuments[i].nom_monu+'</b></center>'+'<br \>'+'<center>'+this.state.monuments[i].lib_imp+'</center>');
             else if (this.state.monuments[i].id_imp==2)
               L.marker([this.state.monuments[i].Latitude,this.state.monuments[i].Longitude],{icon:violetIcon}).addTo(this.map.leafletElement).bindPopup('<img style="width:100%;border: 2px solid;" src="https://devweb.iutmetz.univ-lorraine.fr/~ramier2u/monumix/images/monument'+(i+1)+'/image1.jpg">'+'<center><b>'+this.state.monuments[i].nom_monu+'</b></center>'+'<br \>'+'<center>'+this.state.monuments[i].lib_imp+'</center>');
@@ -174,7 +163,8 @@ export default class Home extends Component {
 
   render() {
     const marker =
-        <Marker position={this.state.marker}>
+        <Marker position={this.state.marker}
+                onLoad={setInterval(this.update, 1000)}>
           <Popup >
             Vous êtes ici !
           </Popup>
@@ -191,7 +181,6 @@ export default class Home extends Component {
             />
             {marker}
           </Map>
-
         </div>
 
     )
