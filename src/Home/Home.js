@@ -115,7 +115,15 @@ export default class Home extends Component {
   componentDidMount() {
     var self= this
     Geolocation.getCurrentPosition(success, error, options);
-    this.setState({marker:position});
+    Geolocation.watchPosition(position => {
+        this.setState({marker:[position.coords.latitude,position.coords.longitude]})
+        console.log(this.state.marker);
+  },
+  error => alert(error.message),
+  { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+);
+
+
     axios.get('https://devweb.iutmetz.univ-lorraine.fr/~ramier2u/monumix/api/monuments.php').then(res=>{
           const monu = res.data;
           self.setState({monuments:monu});
@@ -166,8 +174,7 @@ export default class Home extends Component {
 
   render() {
     const marker =
-        <Marker position={this.state.marker}
-                onLoad={setInterval(this.update, 1000)}>
+        <Marker position={this.state.marker}>
           <Popup >
             Vous êtes ici !
           </Popup>
