@@ -4,13 +4,14 @@ import "./Home.css";
 import { Map, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
 import Geolocation from '@react-native-community/geolocation'
-import { Button } from 'react-bootstrap';
+import { Button , Image} from 'react-bootstrap';
 import Col from 'react-bootstrap/Col'
 import Navbar from "react-bootstrap/Navbar";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import FormControl from "react-bootstrap/FormControl";
 import axios from 'axios'
-import 'leaflet-routing-machine';
+import toast from 'toasted-notes'
+import 'toasted-notes/src/styles.css';
 
 type State = {
   lat: number,
@@ -119,14 +120,17 @@ export default class Home extends Component {
           for(var i=0;i<Object.keys(this.state.monuments).length;i++){
             if (this.state.monuments[i].id_imp==1)
               L.marker([this.state.monuments[i].Latitude,this.state.monuments[i].Longitude],{icon:redIcon}).addTo(this.map.leafletElement)
-                  .bindPopup('<img style="width:100%;border: 2px solid;" src="https://devweb.iutmetz.univ-lorraine.fr/~ramier2u/monumix/images/monument'+(i+1)+'/image1.jpg">'+'<center><b>'+this.state.monuments[i].nom_monu+'</b></center>'+'<br \>'+'<center>'+this.state.monuments[i].lib_imp+'</center>');
+                  .bindPopup("<img  style='width:100%'src=https://devweb.iutmetz.univ-lorraine.fr/~ramier2u/monumix/images/monument" + this.state.monuments[i].id_monu + "/image1.jpg </img>"+'<center><b>'+this.state.monuments[i].nom_monu+'</b></center>'+'<br \>'+'<center>'+this.state.monuments[i].introduction+'</center>');
             else if (this.state.monuments[i].id_imp==2)
-              L.marker([this.state.monuments[i].Latitude,this.state.monuments[i].Longitude],{icon:violetIcon}).addTo(this.map.leafletElement).bindPopup('<img style="width:100%;border: 2px solid;" src="https://devweb.iutmetz.univ-lorraine.fr/~ramier2u/monumix/images/monument'+(i+1)+'/image1.jpg">'+'<center><b>'+this.state.monuments[i].nom_monu+'</b></center>'+'<br \>'+'<center>'+this.state.monuments[i].lib_imp+'</center>');
+              L.marker([this.state.monuments[i].Latitude,this.state.monuments[i].Longitude],{icon:violetIcon}).addTo(this.map.leafletElement).bindPopup('<center><b>'+this.state.monuments[i].nom_monu+'</b></center>'+'<br \>'+'<center>'+this.state.monuments[i].introduction+'</center>');
             else
-              L.marker([this.state.monuments[i].Latitude,this.state.monuments[i].Longitude],{icon:greenIcon}).addTo(this.map.leafletElement).bindPopup('<img style="width:100%;border: 2px solid;" src="https://devweb.iutmetz.univ-lorraine.fr/~ramier2u/monumix/images/monument'+(i+1)+'/image1.jpg">'+'<center><b>'+this.state.monuments[i].nom_monu+'</b></center>'+'<br \>'+'<center>'+this.state.monuments[i].lib_imp+'</center>');
+              L.marker([this.state.monuments[i].Latitude,this.state.monuments[i].Longitude],{icon:greenIcon}).addTo(this.map.leafletElement).bindPopup('<center><b>'+this.state.monuments[i].nom_monu+'</b></center>'+'<br \>'+'<center>'+this.state.monuments[i].introduction+'</center>');
           }
         }
-    );
+    ) .catch(function (error) {
+    toast.notify("Veuillez relancer l'application avec un accès à internet" );
+    console.log(error);
+  });
 
 
 
@@ -135,15 +139,36 @@ export default class Home extends Component {
   update = () =>{
     window.navigator.vibrate(1000);
     Geolocation.getCurrentPosition(success, error, options);
+    //position=[49.121418,6.172670];
+    var vardis=200;
     this.setState({marker:position,zoom:this.getMapZoom()});
     if (nearLocation != [] && distance(nearLocation[0],nearLocation[1],position[0],position[1])>150){
       this.setState({near:false});
     }
+
     for(var i=0;i<Object.keys(this.state.monuments).length;i++){
       if (distance(position[0],position[1],this.state.monuments[i].Latitude,this.state.monuments[i].Longitude)<=150 && this.state.near==false){
+        if (distance(position[0],position[1],this.state.monuments[i].Latitude,this.state.monuments[i].Longitude)<vardis)
+        vardis=distance(position[0],position[1],this.state.monuments[i].Latitude,this.state.monuments[i].Longitude);
+      }
+    }
+
+    for(var i=0;i<Object.keys(this.state.monuments).length;i++){
+      if (distance(position[0],position[1],this.state.monuments[i].Latitude,this.state.monuments[i].Longitude)<=vardis && this.state.near==false){
         window.navigator.vibrate(1000);
         this.setState({near:true});
-        alert(`Vous êtes proche de `+this.state.monuments[i].nom_monu)
+
+        var lurl = "https://devweb.iutmetz.univ-lorraine.fr/~ramier2u/monumix/images/monument" + this.state.monuments[i].id_monu + "/image1.jpg";
+
+        toast.notify(
+       <div>
+           <Image src = {lurl} fluid />
+           Vous êtes proche de {this.state.monuments[i].nom_monu}
+           <Button className="btn_popup" variant="info" size="sm" block>
+               Plus d'informations
+           </Button>
+       </div>
+       , {duration: null});
 
         nearLocation=[this.state.monuments[i].Latitude,this.state.monuments[i].Longitude,i];
         //alert(`Vous êtes proche de `+this.state.monuments.id[i].nom_monu)
