@@ -3,10 +3,11 @@ import './Navbar.css';
 import {Navbar, Nav, Form, Button} from 'react-bootstrap';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {withRouter} from 'react-router-dom';
+import {withRouter, Link} from 'react-router-dom';
 
 import Col from 'react-bootstrap/Col'
 import FormControl from "react-bootstrap/FormControl";
+
 
 const Navigation = (props) => {
     console.log(props);
@@ -21,10 +22,10 @@ const Navigation = (props) => {
             </Col>
 
             <Col sm={0.5}>
-                <Button className="btn" variant="light" href="/Menu"><i className="fa fa-bars"></i></Button>
+                <Link to="/Menu"><Button className="btn" variant="light"><i className="fa fa-bars"></i></Button></Link>
             </Col>
         </Navbar>
     )
 }
 
-export default withRouter(Navigation);
+export default Navigation;

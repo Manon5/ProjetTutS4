@@ -4,13 +4,14 @@ import "./Home.css";
 import { Map, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
 import Geolocation from '@react-native-community/geolocation'
-import { Button } from 'react-bootstrap';
+import { Button , Image} from 'react-bootstrap';
 import Col from 'react-bootstrap/Col'
 import Navbar from "react-bootstrap/Navbar";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import FormControl from "react-bootstrap/FormControl";
 import axios from 'axios'
-import 'leaflet-routing-machine';
+import toast from 'toasted-notes'
+import 'toasted-notes/src/styles.css';
 
 type State = {
   lat: number,
@@ -40,8 +41,8 @@ var greenIcon = new L.Icon({
   shadowSize: [41, 41]
 });
 
-var yellowIcon = new L.Icon({
-  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png',
+var redIcon = new L.Icon({
+  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
   iconSize: [25, 41],
   iconAnchor: [12, 41],
@@ -57,6 +58,8 @@ var violetIcon = new L.Icon({
   popupAnchor: [1, -34],
   shadowSize: [41, 41]
 });
+
+
 
 function distance(lat1, lon1, lat2, lon2) {
   if ((lat1 == lat2) && (lon1 == lon2)) {
@@ -100,11 +103,6 @@ export default class Home extends Component {
       marker:position,
       zoom:14,
       near:false,
-      markers: [
-        { key: 'marker1', position: [51.5, -0.1], content: 'My first popup' },
-        { key: 'marker2', position: [51.51, -0.1], content: 'My second popup' },
-        { key: 'marker3', position: [51.49, -0.05], content: 'My third popup' },
-      ],
       monuments:[],
 
     };
@@ -115,29 +113,24 @@ export default class Home extends Component {
   componentDidMount() {
     var self= this
     Geolocation.getCurrentPosition(success, error, options);
-    Geolocation.watchPosition(position => {
-        this.setState({marker:[position.coords.latitude,position.coords.longitude]})
-        console.log(this.state.marker);
-  },
-  error => alert(error.message),
-  { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-);
-
-
+    this.setState({marker:position});
     axios.get('https://devweb.iutmetz.univ-lorraine.fr/~ramier2u/monumix/api/monuments.php').then(res=>{
           const monu = res.data;
           self.setState({monuments:monu});
           for(var i=0;i<Object.keys(this.state.monuments).length;i++){
             if (this.state.monuments[i].id_imp==1)
-              L.marker([this.state.monuments[i].Latitude,this.state.monuments[i].Longitude],{icon:yellowIcon}).addTo(this.map.leafletElement)
-                  .bindPopup('<img style="width:100%;border: 2px solid;" src="https://devweb.iutmetz.univ-lorraine.fr/~ramier2u/monumix/images/monument'+(i+1)+'/image1.jpg">'+'<center><b>'+this.state.monuments[i].nom_monu+'</b></center>'+'<br \>'+'<center>'+this.state.monuments[i].lib_imp+'</center>');
+              L.marker([this.state.monuments[i].Latitude,this.state.monuments[i].Longitude],{icon:redIcon}).addTo(this.map.leafletElement)
+                  .bindPopup("<img  style='width:100%'src=https://devweb.iutmetz.univ-lorraine.fr/~ramier2u/monumix/images/monument" + this.state.monuments[i].id_monu + "/image1.jpg </img>"+'<center><b>'+this.state.monuments[i].nom_monu+'</b></center>'+'<br \>'+'<center>'+this.state.monuments[i].introduction+'</center>');
             else if (this.state.monuments[i].id_imp==2)
-              L.marker([this.state.monuments[i].Latitude,this.state.monuments[i].Longitude],{icon:violetIcon}).addTo(this.map.leafletElement).bindPopup('<img style="width:100%;border: 2px solid;" src="https://devweb.iutmetz.univ-lorraine.fr/~ramier2u/monumix/images/monument'+(i+1)+'/image1.jpg">'+'<center><b>'+this.state.monuments[i].nom_monu+'</b></center>'+'<br \>'+'<center>'+this.state.monuments[i].lib_imp+'</center>');
+              L.marker([this.state.monuments[i].Latitude,this.state.monuments[i].Longitude],{icon:violetIcon}).addTo(this.map.leafletElement).bindPopup('<center><b>'+this.state.monuments[i].nom_monu+'</b></center>'+'<br \>'+'<center>'+this.state.monuments[i].introduction+'</center>');
             else
-              L.marker([this.state.monuments[i].Latitude,this.state.monuments[i].Longitude],{icon:greenIcon}).addTo(this.map.leafletElement).bindPopup('<img style="width:100%;border: 2px solid;" src="https://devweb.iutmetz.univ-lorraine.fr/~ramier2u/monumix/images/monument'+(i+1)+'/image1.jpg">'+'<center><b>'+this.state.monuments[i].nom_monu+'</b></center>'+'<br \>'+'<center>'+this.state.monuments[i].lib_imp+'</center>');
+              L.marker([this.state.monuments[i].Latitude,this.state.monuments[i].Longitude],{icon:greenIcon}).addTo(this.map.leafletElement).bindPopup('<center><b>'+this.state.monuments[i].nom_monu+'</b></center>'+'<br \>'+'<center>'+this.state.monuments[i].introduction+'</center>');
           }
         }
-    );
+    ) .catch(function (error) {
+    toast.notify("Veuillez relancer l'application avec un accès à internet" );
+    console.log(error);
+  });
 
 
 
@@ -146,15 +139,34 @@ export default class Home extends Component {
   update = () =>{
     window.navigator.vibrate(1000);
     Geolocation.getCurrentPosition(success, error, options);
+    position=[49.121418,6.172670];
+    var vardis=150;
     this.setState({marker:position,zoom:this.getMapZoom()});
     if (nearLocation != [] && distance(nearLocation[0],nearLocation[1],position[0],position[1])>150){
       this.setState({near:false});
+      vardis=150;
     }
+
     for(var i=0;i<Object.keys(this.state.monuments).length;i++){
-      if (distance(position[0],position[1],this.state.monuments[i].Latitude,this.state.monuments[i].Longitude)<=150 && this.state.near==false){
+      if (distance(position[0],position[1],this.state.monuments[i].Latitude,this.state.monuments[i].Longitude)<=vardis){
+        vardis=distance(position[0],position[1],this.state.monuments[i].Latitude,this.state.monuments[i].Longitude);
+      }
+    }
+
+    for(var i=0;i<Object.keys(this.state.monuments).length;i++){
+      if (distance(position[0],position[1],this.state.monuments[i].Latitude,this.state.monuments[i].Longitude)<=vardis && this.state.near==false){
         window.navigator.vibrate(1000);
         this.setState({near:true});
-        alert(`Vous êtes proche de `+this.state.monuments[i].nom_monu)
+        var lurl = "https://devweb.iutmetz.univ-lorraine.fr/~ramier2u/monumix/images/monument" + this.state.monuments[i].id_monu + "/image1.jpg";
+        toast.notify(
+       <div>
+           <Image src = {lurl} fluid />
+           Vous êtes proche de {this.state.monuments[i].nom_monu}
+           <Button className="btn_popup" variant="info" size="sm" block>
+               Plus d'informations
+           </Button>
+       </div>
+       , {duration: null});
 
         nearLocation=[this.state.monuments[i].Latitude,this.state.monuments[i].Longitude,i];
         //alert(`Vous êtes proche de `+this.state.monuments.id[i].nom_monu)
@@ -174,7 +186,8 @@ export default class Home extends Component {
 
   render() {
     const marker =
-        <Marker position={this.state.marker}>
+        <Marker position={this.state.marker}
+                onLoad={setInterval(this.update, 10000)}>
           <Popup >
             Vous êtes ici !
           </Popup>
@@ -184,14 +197,13 @@ export default class Home extends Component {
 
     return (
         <div>
-          <Map  ref={(ref) => { this.map = ref; }} center={[49.133333,6.166667]} zoom={this.state.zoom} maxBounds={[[49.072067,6.100502],[49.143538,6.256371]]} maxBoundsViscosity={1.0} zoomControl={true} maxZoom={18} minZoom={13}>
+          <Map  ref={(ref) => { this.map = ref; }} center={[49.133333,6.166667]} zoom={this.state.zoom} maxBounds={[[49.072067,6.100502],[49.143538,6.256371]]} maxBoundsViscosity={1.0} zoomControl={false} maxZoom={18} minZoom={13}>
             <TileLayer
                 attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             {marker}
           </Map>
-
         </div>
 
     )

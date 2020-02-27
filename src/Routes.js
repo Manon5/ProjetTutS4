@@ -8,11 +8,10 @@ import history from './history';
 export default class Routes extends Component {
     render() {
         return (
-            <Router history={history}>
                 <Switch>
-                    <Route path="/" exact component={Home} />                    <Route path="/Menu" component={Menu} />
+                     <Route path="/Menu"  component={Menu} />
+                    <Route path="/" component={Home} />
                 </Switch>
-            </Router>
         )
     }
 }

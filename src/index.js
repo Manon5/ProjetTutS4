@@ -7,10 +7,10 @@ import 'bootstrap/dist/css/bootstrap.css';
 
 import App from './App';
 
-ReactDOM.render(    
-    <Router> 
+
+ReactDOM.render(
+    <Router>
         <App />
     </Router>,
     document.getElementById('root')
     );
-

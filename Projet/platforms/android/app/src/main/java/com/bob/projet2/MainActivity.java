@@ -17,7 +17,7 @@
        under the License.
  */
 
-package com.bob.projet1;
+package com.bob.projet2;
 
 import android.os.Bundle;
 import org.apache.cordova.*;
