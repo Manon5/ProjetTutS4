@@ -137,10 +137,10 @@ export default class Home extends Component {
   }
 
   update = () =>{
+    window.navigator.vibrate(1000);
     Geolocation.getCurrentPosition(success, error, options);
-    position=[49.121088,6.172350 ];
+    position=[49.121088,6.172350];
     var vardis=150;
-;
     this.setState({marker:position,zoom:this.getMapZoom()});
     if (nearLocation != [] && distance(nearLocation[0],nearLocation[1],position[0],position[1])>150){
       this.setState({near:false});
@@ -161,7 +161,7 @@ export default class Home extends Component {
         toast.notify(
        <div>
            <Image src = {lurl} fluid />
-           Vous êtes proche de {this.state.monuments[i].nom_monu}
+           <br />Vous êtes proche de {this.state.monuments[i].nom_monu}
            <Button className="btn_popup" variant="info" size="sm" block>
                Plus d'informations
            </Button>
