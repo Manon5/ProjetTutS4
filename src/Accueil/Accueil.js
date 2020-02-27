@@ -3,7 +3,6 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/Button";
 import {withRouter, Link} from 'react-router-dom';
-import {idee_monument} from "../context";
 import "./Accueil.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -14,10 +13,11 @@ class Accueil extends Component {
                 <Container>
                     <Row>
                         <img src = "Logo.png" alt = "Monu'Mix" />
-                        <Button className="btn_menu" variant="info" size="lg" block onClick = {() => {console.log(idee_monument.id);}}>
+                    </Row>
+                    <Row>
+                        <Link to="/Home" className = "btn_menu"><Button className="btn_menu" variant="info" size="lg" block>
                             Accéder à la carte
-
-                        </Button>
+                        </Button></Link>
                     </Row>
                 </Container>
             </div>
