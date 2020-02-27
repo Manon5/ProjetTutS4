@@ -135,28 +135,28 @@ export default class Home extends Component {
 							var lat = position.coords.latitude;
 							var long = position.coords.longitude;
 							console.log([lat,long])
+							position=[lat,long];
 							this.setState({marker:[lat,long]});}, error, options);
+		
 
 
   }
 
   update = () =>{
-
-    var vardis=150;
+	var vardis=150;
     this.setState({zoom:this.getMapZoom()});
-    if (nearLocation != [] && distance(nearLocation[0],nearLocation[1],position[0],position[1])>150){
+    if (nearLocation != [] && distance(nearLocation[0],nearLocation[1],this.state.marker[0],this.state.marker[1])>150){
       this.setState({near:false});
       vardis=150;
     }
-
     for(var i=0;i<Object.keys(this.state.monuments).length;i++){
-      if (distance(position[0],position[1],this.state.monuments[i].Latitude,this.state.monuments[i].Longitude)<=vardis){
-        vardis=distance(position[0],position[1],this.state.monuments[i].Latitude,this.state.monuments[i].Longitude);
+      if (distance(this.state.marker[0],this.state.marker[1],this.state.monuments[i].Latitude,this.state.monuments[i].Longitude)<=vardis){
+        vardis=distance(this.state.marker[0],this.state.marker[1],this.state.monuments[i].Latitude,this.state.monuments[i].Longitude);
       }
     }
 
     for(var i=0;i<Object.keys(this.state.monuments).length;i++){
-      if (distance(position[0],position[1],this.state.monuments[i].Latitude,this.state.monuments[i].Longitude)<=vardis && this.state.near==false){
+      if (distance(this.state.marker[0],this.state.marker[1],this.state.monuments[i].Latitude,this.state.monuments[i].Longitude)<=vardis && this.state.near==false){
         window.navigator.vibrate(1000);
         this.setState({near:true});
         var lurl = "https://devweb.iutmetz.univ-lorraine.fr/~ramier2u/monumix/images/monument" + this.state.monuments[i].id_monu + "/image1.jpg";
@@ -171,7 +171,6 @@ export default class Home extends Component {
        , {duration: null});
 
         nearLocation=[this.state.monuments[i].Latitude,this.state.monuments[i].Longitude,i];
-        //alert(`Vous êtes proche de `+this.state.monuments.id[i].nom_monu)
         break;
       }
     }
