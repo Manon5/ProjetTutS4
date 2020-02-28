@@ -42,9 +42,16 @@
     margin: auto;
 }
 
+.description{
+  font-size:0.7em;
+}
+
+.btn_see{
+    width:1px;
+    height: 10px;
+}
 .block_menu{
-    margin: 10px;
-    padding: 5px;
+    margin: 10px 0 10px 0;
     background: #5bc0de ;
     box-shadow: 0px 3px 1px #0275d8 ;
     max-height: 200px;
@@ -56,5 +63,7 @@
     max-height: 180px;
 }
 
-
-
+.container{
+    margin : auto;
+    padding: 0;
+}

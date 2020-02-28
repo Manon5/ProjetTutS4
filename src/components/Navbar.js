@@ -13,7 +13,7 @@ const Navigation = (props) => {
     console.log(props);
     return (
 
-        <Navbar bg="dark" variant="dark">
+        <Navbar fixed="top" bg="dark" variant="dark">
             <Col sm={11}>
                 <FormControl type="text" placeholder="Recherche" className="mr-sm-2" expand="md" size="sm"/>
             </Col>

@@ -116,9 +116,7 @@ generateCarousel = (bn) => {
                 {this.state.persons.map(x =>
 
                 <Container>
-                <Link to="/Home">  <Button className="btn_desci" variant="danger" size="lg" >
-                      Retour à la carte
-                  </Button></Link>
+
                     <Row>
                         {this.generateCarousel(x.nbimages)}
                     </Row>
@@ -137,7 +135,9 @@ generateCarousel = (bn) => {
                             {x.description}
                         </p>
                     </Row>
-
+                    <Link to="/Home">  <Button className="btn_desci" variant="danger" size="lg" >
+                          Retour à la carte
+                      </Button></Link>
                     </div>
                 </Container>
             )}

@@ -3,10 +3,13 @@ import './Incontournables.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
+import Button from "react-bootstrap/Button";
+import {Link} from 'react-router-dom';
 import Col from 'react-bootstrap/Col'
 import Image from 'react-bootstrap/Image'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
+import {idee_monument} from "../context.js"
 
 var salut;
 export default class Incontournables extends React.Component {
@@ -59,7 +62,7 @@ export default class Incontournables extends React.Component {
 
                 {this.state.persons.map(x => <Container>
                     <Row className = "block_menu">
-                        <Col xs={4} className="see_more" >
+                        <Col xs={4} className="see_moree" >
                             <Image width="100%" src={this.generate_url(x.id_monu)} rounded  />
                         </Col>
                         <Col className="description" xs={7}>
@@ -67,7 +70,7 @@ export default class Incontournables extends React.Component {
                         </Col>
 
                         <Col xs={1} className="see_more">
-                            <a href=""><i className="fas fa-arrow-circle-right fa-lg"></i></a>
+                            <Link to="/Descriptif"><Button class="btn btn-default btn-xs btn-block" onClick={() => {idee_monument.id=x.id_monu;}}>+</Button></Link>
                         </Col>
                     </Row>
                 </Container>)}
