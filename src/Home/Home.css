@@ -41,7 +41,9 @@ body{
 
 .ret_row{
     float: right;
-    padding: 15px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    margin-top: 20px;
 }
 
   

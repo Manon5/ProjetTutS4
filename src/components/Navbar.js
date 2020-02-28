@@ -15,7 +15,7 @@ const Navigation = (props) => {
 
         <Navbar bg="dark" variant="dark">
             <Col sm={11}>
-                <FormControl type="text" placeholder="Search" className="mr-sm-2" expand="md" size="sm"/>
+                <FormControl type="text" placeholder="Recherche" className="mr-sm-2" expand="md" size="sm"/>
             </Col>
             <Col sm={0.5}>
                 <Button className="btn" variant="outline-light" ><i className="fa fa-search"></i></Button>

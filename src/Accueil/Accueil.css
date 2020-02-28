@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .Menu {
     width: 90%;
     margin: 10px auto;
@@ -5,4 +6,13 @@
 
 img {
     margin : auto;
+=======
+.Menu {
+    width: 100%;
+    margin: auto;
+}
+
+img {
+    margin : auto;
+>>>>>>> 44f3c22b4ecb6ce4c343b2887fa929acbf737ac3
 }

@@ -10,8 +10,12 @@
     "leaflet-routing-machine": "^3.2.12",
     "react": "^16.12.0",
     "react-bootstrap": "^1.0.0-beta.16",
+<<<<<<< HEAD
     "react-dom": "^16.9.0",
     "react-notifications-component": "^2.3.0",
+=======
+    "react-dom": "^16.13.0",
+>>>>>>> 44f3c22b4ecb6ce4c343b2887fa929acbf737ac3
     "react-router": "^5.1.2",
     "react-router-dom": "^5.0.1",
     "react-scripts": "^3.4.0",
