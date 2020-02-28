@@ -60,20 +60,18 @@ export default class Incontournables extends React.Component {
         return (
             <div>
 
-                {this.state.persons.map(x => <Container>
+                {this.state.persons.map(x => <Link to="/Descriptif"><Button variant="light" class="btn btn-light" onClick={() => {idee_monument.id=x.id_monu;}}><Container>
                     <Row className = "block_menu">
-                        <Col xs={4} className="see_moree" >
+                        <Col xs={4} className="see_more" >
                             <Image width="100%" src={this.generate_url(x.id_monu)} rounded  />
                         </Col>
                         <Col className="description" xs={7}>
                             {x.introduction}
                         </Col>
 
-                        <Col xs={1} className="see_more">
-                            <Link to="/Descriptif"><Button class="btn btn-default btn-xs btn-block" onClick={() => {idee_monument.id=x.id_monu;}}>+</Button></Link>
-                        </Col>
+
                     </Row>
-                </Container>)}
+                </Container></Button></Link>)}
 
             </div>
         )
