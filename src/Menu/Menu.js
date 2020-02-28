@@ -28,8 +28,8 @@ class Menu extends Component {
                     </Row>
 
                     <Row>
-                        <Link to="/Parcours" className="btn_menu"><Button className="btn_menu" variant="info" size="lg" block inactive>
-                            Parcours de visite
+                        <Link to="/Parcours" className="btn_menu"><Button className="btn_menu" variant="info" size="lg" block disabled>
+                            Parcours de visite (Prochainement)
                             <i className="fas fa-map-marked-alt fa-2x"></i>
                         </Button></Link>
                     </Row>
