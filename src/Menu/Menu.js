@@ -14,24 +14,24 @@ class Menu extends Component {
 
                 <Container>
                     <Row>
-                        <Button className="btn_menu" variant="info" size="lg" block>
+                        <Link to="/Proximite" className="btn_menu"><Button className="btn_menu" variant="info" size="lg" block>
                             Monuments à proximité
                             <i className="fas fa-route fa-2x"></i>
-                        </Button>
+                        </Button></Link>
                     </Row>
 
                     <Row>
-                        <Button className="btn_menu" variant="info" size="lg" block>
+                        <Link to="/Incontournables" className="btn_menu"><Button className="btn_menu" variant="info" size="lg" block>
                             Les incontournables
                             <i className="fas fa-crown fa-2x"></i>
-                        </Button>
+                        </Button></Link>
                     </Row>
 
                     <Row>
-                        <Button className="btn_menu" variant="info" size="lg" block>
+                        <Link to="/Parcours" className="btn_menu"><Button className="btn_menu" variant="info" size="lg" block inactive>
                             Parcours de visite
                             <i className="fas fa-map-marked-alt fa-2x"></i>
-                        </Button>
+                        </Button></Link>
                     </Row>
 
                     <Row className="ret_row">
