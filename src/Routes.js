@@ -3,6 +3,7 @@ import { Router, Switch, Route } from "react-router-dom";
 
 import Menu from "./Menu/Menu";
 import Home from "./Home/Home";
+import Accueil from "./Accueil/Accueil";
 import Descriptif from "./Descriptif/Descriptif";
 import history from './history';
 
@@ -12,7 +13,8 @@ export default class Routes extends Component {
                 <Switch>
                      <Route path="/Menu"  component={Menu} />
                      <Route path="/Descriptif"  component={Descriptif} />
-                    <Route path="/" component={Home} />
+                    <Route path="/Home" component={Home} />
+                    <Route path="/" component={Accueil} />
                 </Switch>
         )
     }
