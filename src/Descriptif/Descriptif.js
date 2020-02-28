@@ -112,12 +112,17 @@ generateCarousel = (bn) => {
 
         return (
           <div>
+
                 {this.state.persons.map(x =>
 
                 <Container>
+                <Link to="/Home">  <Button className="btn_desci" variant="danger" size="lg" >
+                      Retour à la carte
+                  </Button></Link>
                     <Row>
                         {this.generateCarousel(x.nbimages)}
                     </Row>
+
                     <Row>
                         <h1>{x.nom_monu}</h1>
                     </Row>
@@ -132,11 +137,7 @@ generateCarousel = (bn) => {
                             {x.description}
                         </p>
                     </Row>
-                    <Row className="ret_row">
-                      <Link to="/Home">  <Button className="btn_ret" variant="danger" size="lg" >
-                            Retour à la carte
-                        </Button></Link>
-                    </Row>
+
                     </div>
                 </Container>
             )}
